@@ -4,24 +4,24 @@ module alu #(
     parameter DATA_WIDTH = 32
 )
 (
-    input   logic   [DATA_WIDTH-1:0]    a_i,
-    input   logic   [DATA_WIDTH-1:0]    b_i,
+    input   signed  [DATA_WIDTH-1:0]    a_i,
+    input   signed  [DATA_WIDTH-1:0]    b_i,
     input   logic   [4:0]               control_i,
     output  logic   [3:0]               flags_o, // Overflow, Carry, Negative, Zero
-    output  logic   [DATA_WIDTH-1:0]    result_o
+    output  signed  [DATA_WIDTH-1:0]    result_o
 );
 
     logic   [DATA_WIDTH:0]  result_w;
     
-    assign flags_o[0] = &result_w[DATA_WIDTH-1:0]; // Zero
-    assign flags_o[1] = result_w[DATA_WIDTH-1] == 1 ? 1'b1 : 1'b0; // Negative
-    assign flags_o[2] = result_w[DATA_WIDTH]; // Carry
+    assign flags_o[0] = ~|result_w[DATA_WIDTH-1:0]; // Zero
+    assign flags_o[1] =   result_w[DATA_WIDTH-1]; // Negative
+    assign flags_o[2] =   result_w[DATA_WIDTH]; // Carry
 
     // Overflow flag logic    
     always_comb begin
         case(control_i) 
             5'd1:   flags_o[3] = ~(a_i[DATA_WIDTH-1] ^ b_i[DATA_WIDTH-1]) & result_w[DATA_WIDTH-1] != a_i[DATA_WIDTH-1];
-            5'd2:   flags_o[3] =   a_i[DATA_WIDTH-1] ^ b_i[DATA_WIDTH-1]  & result_w[DATA_WIDTH-1] != a_i[DATA_WIDTH-1]; 
+            5'd2:   flags_o[3] =  (a_i[DATA_WIDTH-1] ^ b_i[DATA_WIDTH-1]) & result_w[DATA_WIDTH-1] != a_i[DATA_WIDTH-1]; 
             default:flags_o[3] = 1'b0;
         endcase
     end
