@@ -8,13 +8,11 @@ module aluTB;
                             b, 
                             result;
     logic           [4:0]   control;
-    logic           [3:0]   flags;
     
     alu dut(
         .a_i(a),
         .b_i(b),
         .control_i(control),
-        .flags_o(flags),
         .result_o(result)
     );
 
@@ -23,7 +21,7 @@ module aluTB;
     initial begin
         rc = new();
 
-        repeat(100) begin
+        repeat(1000) begin
             if(rc.randomize() == 1) begin
                 a =         rc.a;
                 b =         rc.b;
@@ -31,11 +29,12 @@ module aluTB;
                 
                 #10;
                
-                if(flags[3] == 1 || result == a + b) begin
-                    $display("success"); 
+                //$display("control=%d a=%d b=%d result=%d", control, rc.a, rc.b, result);
+                if(longint'(result) === longint'(rc.a) + longint'(rc.b)) begin
+                    $display("success");
                 end   
                 else begin
-                    $display("control=%d a=%d b=%d result=%d flags=%b Overflow, Carry, Negative, Zero",control, a, b, result, flags);
+                    $display("control=%d a=%d b=%d result=%d", control, a, b, result);
                     $display("failure");
                 end                                   
                 
@@ -44,7 +43,6 @@ module aluTB;
                 $fatal(1,"Randomization Failed");
             end
         end
-
         $finish;
     end
 endmodule
