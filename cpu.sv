@@ -20,7 +20,8 @@ module cpu(
 
     wire logic [31:0]   imm_w;
     wire logic [4:0]    rd_w, rs1_w, rs2_w;
-    wire logic [4:0]    alu_control_w;
+    wire logic [2:0]    funct3_w;
+    wire logic [6:0]    funct7_w;
     wire logic          en_imm_w;
     wire logic          en_pc_w;
 
@@ -32,9 +33,10 @@ module cpu(
         .rd             (rd_w),
         .rs1            (rs1_w),
         .rs2            (rs2_w),
-        .alu_control_o  (alu_control_w),
-        .en_imm_o       (en_imm_w),
-        .en_pc_o        (en_pc_w)
+        .funct3         (funct3_w),
+        .funct7         (funct7_w),
+        .en_imm         (en_imm_w),
+        .en_pc          (en_pc_w)
     );
 
 /***************************************************************************
