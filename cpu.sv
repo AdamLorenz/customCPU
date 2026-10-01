@@ -44,7 +44,7 @@ module cpu(
     /* The following glue logic uses enable signals from the decode unit to 
     determine what operands should be passed to the execute unit and the alu 
     therein. There are three possible combinations: operating on two registers,
-    operating on an immediateand a register, or an immediate and the program 
+    operating on an immediate and a register, or an immediate and the program 
     counter (PC) register */
     wire logic [31:0] operand1_w, operand2_w;
     assign operand1_w = en_pc_w  ? pc  : reg_file[rs1_w];
