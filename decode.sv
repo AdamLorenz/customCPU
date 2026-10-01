@@ -7,14 +7,14 @@ module decode(
     output logic [31:0] imm,
     output logic [4:0]  rd, rs1, rs2,
     output logic [2:0]  funct3,
-    output logic [6:0]  funct7,
+    output logic        alt_func,            // funct7 bit for alu operation select
     output logic        en_imm,
     output logic        en_pc
 );
 
     wire logic [4:0] opcode = instr[6:2];
     
-    // pc and immediate enable bits use to select operands passed to execute unit
+    // pc and immediate enable bits used to select operands passed to execute unit
     always_ff @(posedge clk and negedge reset) begin
         if(~aresetn) begin
             en_imm <= '0;
@@ -32,19 +32,19 @@ module decode(
     // main decode logic
     always_ff @(posedge clk or negedge aresetn) begin
         if(~aresetn) begin
-            imm    <= '0;
-            rd     <= '0;
-            rs1    <= '0;
-            rs2    <= '0;
-            funct3 <= '0;
-            funct7 <= '0;
+            imm      <= '0;
+            rd       <= '0;
+            rs1      <= '0;
+            rs2      <= '0;
+            funct3   <= '0;
+            alt_func <= '0;
         end
         else begin
-            rd     <= instr[11:7];
-            rs1    <= instr[19:15];
-            rs2    <= instr[24:20];
-            funct3 <= instr[14:12];
-            funct7 <= instr[31:25];
+            rd       <= instr[11:7];
+            rs1      <= instr[19:15];
+            rs2      <= instr[24:20];
+            funct3   <= instr[14:12];
+            alt_func <= instr[30];
             casex(opcode) // immediate value decoding
                 5'b1110x,
                 5'b00x00:   imm <= {{20{isntr[31]}}, instr[31:20]};                                         // I type instruction (sign extended)

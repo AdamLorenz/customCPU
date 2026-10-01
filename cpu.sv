@@ -21,7 +21,7 @@ module cpu(
     wire logic [31:0]   imm_w;
     wire logic [4:0]    rd_w, rs1_w, rs2_w;
     wire logic [2:0]    funct3_w;
-    wire logic [6:0]    funct7_w;
+    wire logic [6:0]    alt_func_w;
     wire logic          en_imm_w;
     wire logic          en_pc_w;
 
@@ -34,7 +34,7 @@ module cpu(
         .rs1            (rs1_w),
         .rs2            (rs2_w),
         .funct3         (funct3_w),
-        .funct7         (funct7_w),
+        .alt            (alt_func_w),
         .en_imm         (en_imm_w),
         .en_pc          (en_pc_w)
     );
@@ -59,7 +59,7 @@ module cpu(
         .aresetn        (aresetn),
         .operand1_i     (operand1_w),
         .operand2_i     (operand2_w),
-        .alu_control_i  (alu_control_w),
+        .alu_control_i  (funct3),
         .result_o       (result_w)
     );
     
